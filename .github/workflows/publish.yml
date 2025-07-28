@@ -34,7 +34,7 @@ jobs:
       run: maturin build --release --out dist
 
     - name: Upload wheels
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: wheels-${{ matrix.os }}
         path: dist/
@@ -47,9 +47,11 @@ jobs:
     
     steps:
     - name: Download all wheels
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         path: dist/
+        pattern: wheels-*
+        merge-multiple: true
 
     - name: Flatten wheels directory
       run: |
