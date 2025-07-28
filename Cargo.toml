@@ -1,0 +1,19 @@
+[package]
+name = "externkit"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "externkit"
+path = "src/main.rs"
+
+[lib]
+name = "externkit"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+clap = "4.5.41"
+colored = "2.0"
+pyo3 = { version = "0.25.1", features = ["extension-module"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0.141"
