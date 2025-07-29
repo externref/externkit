@@ -22,9 +22,6 @@ jobs:
           - os: windows-latest
             artifact_name: externkit.exe
             asset_name: externkit-windows-x86_64.exe
-          - os: macos-latest
-            artifact_name: externkit
-            asset_name: externkit-macos-x86_64
 
     steps:
       - name: Checkout code
