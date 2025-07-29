@@ -5,8 +5,8 @@ build-backend = "maturin"
 [project]
 name = "externkit"
 version = "0.1.0"
-description = "A Python extension for externkit"
-readme = "README.md"
+description = "A Python extension for external environment utilities"
+readme = {file = "README_PY.md", content-type = "text/markdown"}
 license = {file = "LICENSE"}
 authors = [
     {name = "externref"},
