@@ -1,0 +1,33 @@
+[build-system]
+requires = ["maturin>=1.0,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "externkit"
+version = "0.1.0"
+description = "A Python extension for externkit"
+readme = "README.md"
+license = {file = "LICENSE"}
+authors = [
+    {name = "externref"},
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Rust",
+]
+requires-python = ">=3.8"
+
+[project.urls]
+Repository = "https://github.com/externref/externkit"
+
+[tool.maturin]
+# Python source is in the root directory
+module-name = "externkit.externkit"
