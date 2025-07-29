@@ -1,6 +1,7 @@
 use clap::{value_parser, Arg, ArgMatches, Command};
 
 mod backend;
+mod editor;
 
 fn main() {
     let matches = clap::Command::new("externkit")
@@ -72,13 +73,45 @@ fn main() {
                         ),
                 ),
         )
-        .subcommand(Command::new("init").about("Initialize the externkit project"));
+        .subcommand(Command::new("init").about("Initialize the externkit project"))
+        .subcommand(
+            Command::new("get_pip")
+                .about("Fetch and run get-pip.py script")
+                .arg(
+                    Arg::new("python_path")
+                        .long("python-path")
+                        .help("The python executable to use")
+                        .value_parser(value_parser!(String)),
+                ),
+        )
+        .subcommand(
+            Command::new("edit")
+                .about("Open the nano-like text editor")
+                .arg(
+                    Arg::new("file")
+                        .help("File to edit")
+                        .value_parser(value_parser!(String)),
+                ),
+        );
 
     let matches = matches.get_matches();
     let project_path = std::path::PathBuf::from("./.externkit");
     match matches.subcommand() {
         Some(("init", _)) => {
             backend::utils::init_project();
+        }
+        Some(("get_pip", sub_matches)) => {
+            backend::python_tools::get_pip(
+                sub_matches
+                    .get_one::<String>("python_path")
+                    .unwrap_or(&"python".to_string()),
+            );
+        }
+        Some(("edit", sub_matches)) => {
+            let filename = sub_matches.get_one::<String>("file");
+            if let Err(e) = editor::start_editor(filename.map(|s| s.as_str())) {
+                eprintln!("Editor error: {}", e);
+            }
         }
         Some((cmd, _)) if cmd == "help" || cmd == "version" => {}
         _ => {
