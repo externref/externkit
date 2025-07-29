@@ -14,6 +14,8 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 clap = "4.5.41"
 colored = "2.0"
+crossterm = "0.28"
 pyo3 = { version = "0.25.1", features = ["extension-module"] }
+reqwest = { version = "0.12.22", features = ["blocking"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0.141"
