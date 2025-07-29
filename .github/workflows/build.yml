@@ -72,9 +72,12 @@ jobs:
     name: Create Release
     needs: build
     runs-on: ubuntu-latest
-    if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'release' || github.event_name == 'workflow_dispatch' || github.event_name == 'push'
     
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
@@ -96,11 +99,38 @@ jobs:
             cd ..
           done
 
-      - name: Upload release assets
+      - name: Get version from Cargo.toml
+        id: version
+        run: |
+          VERSION=$(grep '^version = ' Cargo.toml | head -1 | sed 's/version = "\(.*\)"/\1/')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "tag=v$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Upload release assets (for existing releases)
+        if: github.event_name == 'release'
         uses: softprops/action-gh-release@v1
         with:
           files: |
             artifacts/*.zip
             artifacts/*.tar.gz
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create or update release (for push/manual trigger)
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: Release ${{ steps.version.outputs.version }}
+          body: |
+            Automated release for version ${{ steps.version.outputs.version }}
+            
+            ## Changes
+            - Built from commit ${{ github.sha }}
+            
+            ## Downloads
+            - **Linux**: externkit-linux-x86_64.tar.gz
+            - **Windows**: externkit-windows-x86_64.exe.zip
+          files: |
+            artifacts/*.zip
+            artifacts/*.tar.gz
+          draft: false
+          prerelease: false
