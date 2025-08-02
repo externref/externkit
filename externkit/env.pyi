@@ -1,2 +1,3 @@
 def get(name: str) -> str | None:
+    """Get the value of an environment variable."""
     ...
